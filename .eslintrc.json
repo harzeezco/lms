@@ -1,3 +1,20 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "airbnb",
+    "airbnb-typescript",
+    "plugin:tailwindcss/recommended"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "jsx-quotes": ["error", "prefer-single"],
+    "react/jsx-props-no-spreading": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "react/require-default-props": "off",
+    "react/jsx-no-bind": "off",
+    "operator-linebreak": "off"
+  }
 }

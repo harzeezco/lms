@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+body {
+  /* overflow-x: hidden; */
+}
+
+.bg {
+  /* background: url('/under-image.png'), linear-gradient(to right, #024BA5, #105DBD);
+  background-position: center;
+  background-size: cover;
+  height: 100dvh;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative; */
+}
+
+.bg::before {
+  /* content: '';
+  background-image: url('/grid.png');
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 5;
+  transform: translate(-50%,-50%); */
+}
+
+@layer utilities {
+  .bg-primary {
+    @apply 
+  }
+}
+

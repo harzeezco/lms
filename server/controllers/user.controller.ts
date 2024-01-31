@@ -25,7 +25,7 @@ export const createActiveToken = (
       user,
       activationCode,
     },
-    process.env.JWT_SECRET!,
+    process.env.ACTIVATION_SECRET!,
     {
       expiresIn: '5m',
     },
@@ -45,7 +45,9 @@ interface IUser {
 export const registerUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { avatar, email, name, password } =
+      const {
+        avatar, email, name, password,
+      } =
         req.body as unknown as IUser;
 
       // if email is already exist i.e store in database
@@ -92,6 +94,52 @@ export const registerUser = CatchAsyncError(
         return next(new ErrorHandler(400, error.message));
       }
     } catch (error: any) {
+      return next(new ErrorHandler(400, error.message));
+    }
+  },
+);
+
+// activate user and save to database
+
+interface IActivationRequest {
+  activation_token: string;
+  activation_code: string;
+}
+
+export const activateUser = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { activation_token, activation_code } = req.body as IActivationRequest;
+
+      const newUser: { user: IUser; activationCode: string } =
+        jwt.verify(
+          activation_token,
+          process.env.ACTIVATION_SECRET as string,
+        ) as { user: IUser; activationCode: string };
+
+      if (activation_code !== newUser.activationCode) {
+        return next(new ErrorHandler(400, 'Invalid activation code'));
+      }
+
+      const { email, name, password } = newUser.user;
+
+      const existUser = await UserModel.findOne({ email });
+
+      if (existUser) {
+        return next(new ErrorHandler(400, 'Email already in use'));
+      }
+
+      const user = await UserModel.create({
+        email,
+        name,
+        password,
+      });
+
+      res.status(201).json({
+        success: true,
+        message: 'Account has been activated',
+      });
+    } catch (error) {
       return next(new ErrorHandler(400, error.message));
     }
   },

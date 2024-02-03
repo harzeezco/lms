@@ -4,6 +4,7 @@ import express, { NextFunction, Request, Response } from 'express';
 
 import Error from './middlewares/error';
 import userRouter from './routes/user-route';
+import courseRouter from './routes/course-route';
 
 require('dotenv').config();
 
@@ -23,6 +24,8 @@ app.use(
 app.use(cookieParser());
 
 app.use('/api', userRouter);
+
+app.use('/api', courseRouter);
 
 app.get('/test', (req, res) => {
   res.status(200).json({

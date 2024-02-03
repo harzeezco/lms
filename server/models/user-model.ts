@@ -1,6 +1,9 @@
 import bcrypt from 'bcryptjs';
 import { NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 import { Document, Schema, model } from 'mongoose';
+
+require('dotenv').config();
 
 const emailRegexPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -16,6 +19,8 @@ export interface IUser extends Document {
   password: string;
   role: string;
   isVerified: boolean;
+  signAccessToken: () => string;
+  signRefreshToken: () => string;
 }
 
 const UserSchema: Schema<IUser> = new Schema(
@@ -35,7 +40,6 @@ const UserSchema: Schema<IUser> = new Schema(
     },
     password: {
       type: String,
-      required: [true, 'Please add a password'],
       minlength: [6, 'Password must be at least 6 characters'],
       select: false,
     },
@@ -70,6 +74,28 @@ UserSchema.pre('save', async function (next: NextFunction) {
   this.password = await bcrypt.hash(this.password as string, 10);
   next();
 });
+
+// sign access token
+UserSchema.methods.signAccessToken = function (): string {
+  return jwt.sign(
+    { id: this._id },
+    (process.env.ACCESS_TOKEN as string) || '',
+    {
+      expiresIn: '5m',
+    },
+  );
+};
+
+// Refresh access token
+UserSchema.methods.signRefreshToken = function (): string {
+  return jwt.sign(
+    { id: this._id },
+    (process.env.REFRESH_TOKEN as string) || '',
+    {
+      expiresIn: '3d',
+    },
+  );
+};
 
 // compare user password with database password after hashing the password user entered
 UserSchema.methods.comparePassword = async function (

@@ -27,11 +27,7 @@ export default async function sendEmail(
   const { email, subject, template, data } = options;
 
   // get the path to the email template file
-  const templateFile = path.join(
-    __dirname,
-    '../mails',
-    template,
-  );
+  const templateFile = path.join(__dirname, '../mails', template);
 
   // Render the email template using ejs
   const html: string = await ejs.renderFile(templateFile, data);

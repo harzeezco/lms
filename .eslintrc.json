@@ -3,7 +3,8 @@
     "next/core-web-vitals",
     "airbnb",
     "airbnb-typescript",
-    "plugin:tailwindcss/recommended"
+    "plugin:tailwindcss/recommended",
+    "plugin:react/jsx-runtime"
   ],
   "parserOptions": {
     "project": "./tsconfig.json"
@@ -15,6 +16,7 @@
     "jsx-a11y/no-noninteractive-element-interactions": "off",
     "react/require-default-props": "off",
     "react/jsx-no-bind": "off",
-    "operator-linebreak": "off"
+    "operator-linebreak": "off",
+    "import/prefer-default-export": "off"
   }
 }
